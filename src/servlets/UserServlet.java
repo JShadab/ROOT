@@ -23,6 +23,8 @@ public class UserServlet extends HttpServlet {
 	private static final String SIGN_UP = "SignUp";
 	private static final String POST_AD = "Post_Ad";
 
+	private static final String RESET_PASSWORD = "ResetPassword";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
@@ -42,6 +44,9 @@ public class UserServlet extends HttpServlet {
 		} else if (POST_AD.equals(method)) {
 			postAd(req, resp);
 			return;
+		} else if (RESET_PASSWORD.equals(method)) {
+			resetPassword(req, resp);
+			return;
 		}
 	}
 
@@ -58,7 +63,6 @@ public class UserServlet extends HttpServlet {
 			req.setAttribute("msg", "Login Successful..");
 
 			String roleLevel = user.getRoleLevel();
-			
 
 			if (roleLevel.equalsIgnoreCase("User")) {
 				resp.sendRedirect("/index.jsp");
@@ -101,7 +105,22 @@ public class UserServlet extends HttpServlet {
 		boolean isSuccess = UserRepository.createUser(user);
 
 		if (isSuccess) {
-			resp.sendRedirect("${pageContext.request.contextPath}/signin.jsp");
+			resp.sendRedirect("/home/signin.jsp");
+		}
+
+	}
+
+	private void resetPassword(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		String email = req.getParameter("Email");
+		String newPassword = req.getParameter("Password");
+
+		boolean isUpdated = UserRepository.resetPassword(email, newPassword);
+
+		if (isUpdated) {
+			resp.sendRedirect("/home/signin.jsp?msg=Password reset successful");
+		} else {
+			resp.sendRedirect("/home/signin.jsp?msg=Email not found");
 		}
 
 	}

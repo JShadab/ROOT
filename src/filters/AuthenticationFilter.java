@@ -23,7 +23,7 @@ public class AuthenticationFilter implements Filter {
 		HttpSession session = httpReq.getSession(false);
 
 		if (session == null) {
-			((HttpServletResponse) resp).sendRedirect("${pageContext.request.contextPath}/signin.jsp?msg=Please Login first...");
+			((HttpServletResponse) resp).sendRedirect("/home/signin.jsp?msg=Please Login first...");
 		} else {
 
 			chain.doFilter(req, resp);

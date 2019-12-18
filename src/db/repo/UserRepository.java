@@ -198,4 +198,29 @@ public class UserRepository {
 
 	}
 
+	public static boolean resetPassword(String email, String newPassword) {
+
+		boolean isUpdated = false;
+
+		String insert = "UPDATE users SET password=? WHERE email=?";
+
+		try (Connection connection = DBConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(insert);) {
+
+			ps.setString(1, newPassword);
+			ps.setString(2, email);
+
+			int x = ps.executeUpdate();
+
+			if (x > 0) {
+				isUpdated = true;
+			}
+
+		} catch (SQLException e) {
+			isUpdated = false;
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
+
 }
